@@ -27,7 +27,7 @@ export function ParseCalldata({ rpcUrl: _rpcUrl }: ParseCalldataProps) {
       const normalizedSelector = selector.startsWith('0x') ? selector.toLowerCase() : `0x${selector.toLowerCase()}`
       
       // Use openchain.xyz API (same as Foundry's cast 4byte)
-      const response = await fetch(`https://api.openchain.xyz/signature-database/v1/lookup?function=${normalizedSelector}`)
+      const response = await fetch(`https://api.4byte.sourcify.dev/signature-database/v1/lookup?function=${normalizedSelector}`)
       const data = await response.json()
       
       if (data.ok && data.result && data.result.function) {
