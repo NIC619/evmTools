@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RpcUrlInput } from './components/RpcUrlInput'
 import { QueryContract } from './components/QueryContract'
+import { CheckAddressCode } from './components/CheckAddressCode'
 import './App.css'
 
 const queryClient = new QueryClient()
@@ -27,6 +28,7 @@ function App() {
           {rpcUrl ? (
             <div className="tools-container">
               <QueryContract rpcUrl={rpcUrl} />
+              <CheckAddressCode rpcUrl={rpcUrl} />
             </div>
           ) : (
             <div className="welcome-message">
