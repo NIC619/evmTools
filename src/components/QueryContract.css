@@ -86,6 +86,25 @@
   color: #666;
 }
 
+.warning-message {
+  padding: 0.75rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.warning-message ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.5rem;
+}
+
+.warning-message li {
+  margin-bottom: 0.25rem;
+}
+
 .error-message {
   padding: 0.75rem;
   background: #fee;
