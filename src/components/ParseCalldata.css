@@ -1,0 +1,277 @@
+.parse-calldata {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.parse-calldata h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.help-text {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.parse-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.parse-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.parse-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 0.75rem;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  color: #c33;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.warning-message {
+  padding: 0.75rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.result {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.result h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.result-section {
+  margin-bottom: 1.5rem;
+}
+
+.result-section:last-child {
+  margin-bottom: 0;
+}
+
+.result-label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.selector {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  background: #e3f2fd;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  color: #1976d2;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.signatures-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signature-item {
+  padding: 0.75rem;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.signature-item:hover {
+  border-color: #667eea;
+  background: #f0f7ff;
+}
+
+.signature-item.selected {
+  border-color: #667eea;
+  background: #e3f2fd;
+}
+
+.signature-item code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.parameters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.parameter-item {
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.parameter-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Parameter group container for top-level params with nested values */
+.parameter-group {
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Top-level parameter header within a group */
+.parameter-group > .parameter-item.parameter-top-level {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+/* Container for nested values within a parameter group */
+.parameter-group-nested {
+  padding: 0.5rem;
+  background: #fafbff;
+}
+
+/* Top-level parameters (standalone, no nesting) */
+.parameter-top-level:not(.parameter-group > .parameter-item) {
+  background: white;
+  border: 2px solid #667eea;
+  margin-bottom: 1rem;
+}
+
+/* Nested parameters within a tuple */
+.parameter-nested {
+  margin-left: 1.5rem;
+  border-left: 3px solid #667eea;
+  padding-left: 1rem;
+}
+
+/* Different background colors for different nesting levels within the same top-level param */
+.parameter-group-nested .parameter-item[data-nesting-level="1"] {
+  background: #f8f9ff;
+}
+
+.parameter-group-nested .parameter-item[data-nesting-level="2"] {
+  background: #f0f4ff;
+}
+
+.parameter-group-nested .parameter-item[data-nesting-level="3"] {
+  background: #e8efff;
+}
+
+.parameter-group-nested .parameter-item[data-nesting-level="4"] {
+  background: #e0eaff;
+}
+
+.parameter-name {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.parameter-name strong {
+  color: #667eea;
+  margin-right: 0.5rem;
+}
+
+.parameter-type {
+  color: #666;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.parameter-value {
+  margin-top: 0.5rem;
+}
+
+.parameter-value code {
+  background: #f0f0f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+  display: block;
+  user-select: all;
+  cursor: text;
+}
+
+/* Style for nested tuple parameters */
+.parameter-item[data-nested="true"] {
+  margin-left: 1rem;
+  border-left: 3px solid #667eea;
+  padding-left: 1rem;
+}
+

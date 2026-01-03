@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RpcUrlInput } from './components/RpcUrlInput'
 import { QueryContract } from './components/QueryContract'
 import { CheckAddressCode } from './components/CheckAddressCode'
+import { ParseCalldata } from './components/ParseCalldata'
 import './App.css'
 
 const queryClient = new QueryClient()
@@ -25,16 +26,19 @@ function App() {
           />
         </header>
         <main className="app-main">
-          {rpcUrl ? (
-            <div className="tools-container">
-              <QueryContract rpcUrl={rpcUrl} />
-              <CheckAddressCode rpcUrl={rpcUrl} />
-            </div>
-          ) : (
-            <div className="welcome-message">
-              <p>Please select or enter an RPC URL to get started</p>
-            </div>
-          )}
+          <div className="tools-container">
+            <ParseCalldata />
+            {rpcUrl ? (
+              <>
+                <QueryContract rpcUrl={rpcUrl} />
+                <CheckAddressCode rpcUrl={rpcUrl} />
+              </>
+            ) : (
+              <div className="welcome-message">
+                <p>Select or enter an RPC URL to use contract query and address checking tools</p>
+              </div>
+            )}
+          </div>
         </main>
       </div>
     </QueryClientProvider>
