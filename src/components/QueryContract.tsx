@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import { removeComments } from '../utils/solidity/commentRemover'
+import { findMatchingClosingParen } from '../utils/solidity/parenthesisCounter'
+import { extractMappingKeys, extractMappingValueType } from '../utils/solidity/mappingParser'
+import { parseParamOrReturn, splitByComma } from '../utils/solidity/parameterParser'
 import './QueryContract.css'
 
 interface QueryContractProps {
@@ -29,198 +32,6 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [warnings, setWarnings] = useState<string[]>([])
-
-  // Helper function to extract mapping type with nested parentheses
-  const extractMappingType = (str: string): { type: string; remainder: string } | null => {
-    if (!str.startsWith('mapping(')) return null
-    
-    let depth = 0
-    let typeEnd = 0
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] === '(') depth++
-      if (str[i] === ')') {
-        depth--
-        if (depth === 0) {
-          typeEnd = i + 1
-          break
-        }
-      }
-    }
-    
-    if (typeEnd > 0) {
-      return {
-        type: str.substring(0, typeEnd),
-        remainder: str.substring(typeEnd).trim()
-      }
-    }
-    
-    return null
-  }
-
-  // Helper function to parse a parameter or return value
-  const parseParamOrReturn = (str: string): { type: string; name: string } => {
-    const trimmed = str.trim()
-    
-    // Remove storage location keywords (memory, storage, calldata) from the string
-    // These can appear after the type name: "IProverRegistry.ProverInstance memory" or "uint256[] memory"
-    const storageLocationPattern = /\s+(memory|storage|calldata)\s*$/i
-    const withoutStorage = trimmed.replace(storageLocationPattern, '').trim()
-    
-    // Handle mapping types: mapping(address => uint256) balances
-    // Also handles nested: mapping(address => mapping(uint256 => bool))
-    const mappingResult = extractMappingType(withoutStorage)
-    if (mappingResult) {
-      // Extract name from remainder if present
-      const nameMatch = mappingResult.remainder.match(/^(\w+)/)
-      return {
-        type: mappingResult.type,
-        name: nameMatch ? nameMatch[1] : ''
-      }
-    }
-    
-    // Handle types with names: "uint256 amount" or "IERC20 token"
-    // Match: type name or just type
-    // Support interface types (IERC20, IUniswapV3Pool, etc.) and simple types
-    // Pattern: identifier (can start with I for interfaces) followed by optional name
-    const match = withoutStorage.match(/^([a-zA-Z_][a-zA-Z0-9_.\[\]]*)(?:\s+(\w+))?$/)
-    if (match) {
-      return {
-        type: match[1].trim(),
-        name: match[2] || ''
-      }
-    }
-    
-    // Fallback: treat entire string as type (without storage location)
-    return {
-      type: withoutStorage,
-      name: ''
-    }
-  }
-
-  // Helper function to split parameters/returns by comma, handling nested parentheses
-  const splitByComma = (str: string): string[] => {
-    const result: string[] = []
-    let current = ''
-    let depth = 0
-    
-    for (let i = 0; i < str.length; i++) {
-      const char = str[i]
-      if (char === '(') {
-        depth++
-        current += char
-      } else if (char === ')') {
-        depth--
-        current += char
-      } else if (char === ',' && depth === 0) {
-        if (current.trim()) {
-          result.push(current.trim())
-        }
-        current = ''
-      } else {
-        current += char
-      }
-    }
-    
-    if (current.trim()) {
-      result.push(current.trim())
-    }
-    
-    return result
-  }
-
-  // Helper function to extract the value type from a mapping type
-  const extractMappingValueType = (mappingType: string): string => {
-    if (!mappingType.startsWith('mapping(')) {
-      return mappingType
-    }
-    
-    // Find the => separator
-    let depth = 0
-    let arrowIndex = -1
-    for (let i = 8; i < mappingType.length; i++) { // Start after "mapping("
-      if (mappingType[i] === '(') depth++
-      if (mappingType[i] === ')') {
-        depth--
-        if (depth < 0) break
-      }
-      if (depth === 0 && mappingType[i] === '=' && mappingType[i + 1] === '>') {
-        arrowIndex = i + 2
-        break
-      }
-    }
-    
-    if (arrowIndex > 0) {
-      // Extract everything after => until the closing )
-      let valueType = ''
-      depth = 0
-      for (let i = arrowIndex; i < mappingType.length; i++) {
-        if (mappingType[i] === '(') depth++
-        if (mappingType[i] === ')') {
-          if (depth === 0) {
-            // This is the closing ) of the mapping
-            break
-          }
-          depth--
-        }
-        valueType += mappingType[i]
-      }
-      return valueType.trim()
-    }
-    
-    return mappingType
-  }
-
-  // Helper function to extract all key types from a mapping type (handles nested mappings)
-  const extractMappingKeys = (mappingType: string): string[] => {
-    if (!mappingType.startsWith('mapping(')) {
-      return []
-    }
-    
-    const keys: string[] = []
-    let depth = 0
-    let currentKey = ''
-    let inKey = false
-    
-    // Find the content between mapping( and =>)
-    for (let i = 8; i < mappingType.length; i++) { // Start after "mapping("
-      const char = mappingType[i]
-      
-      if (char === '(') {
-        depth++
-        if (inKey) currentKey += char
-      } else if (char === ')') {
-        if (depth === 0) break // End of mapping
-        depth--
-        if (inKey) currentKey += char
-      } else if (char === '=' && mappingType[i + 1] === '>') {
-        // Found => separator
-        if (depth === 0) {
-          // This is the key separator
-          keys.push(currentKey.trim())
-          currentKey = ''
-          inKey = false
-          i++ // Skip the '>'
-          // Check if the value is another mapping
-          const remaining = mappingType.substring(i + 1)
-          if (remaining.trim().startsWith('mapping(')) {
-            // Recursively extract keys from nested mapping
-            const nestedKeys = extractMappingKeys(remaining.trim())
-            keys.push(...nestedKeys)
-            break
-          }
-        } else {
-          if (inKey) currentKey += char
-        }
-      } else {
-        if (depth === 0 && !inKey && char !== ' ') {
-          inKey = true
-        }
-        if (inKey) currentKey += char
-      }
-    }
-    
-    return keys
-  }
 
   // Helper function to get input fields needed for a parameter type
   const getInputFieldsForType = (type: string): Array<{ label: string; type: string; isMappingKey: boolean }> => {
@@ -615,20 +426,11 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
       }
       
       // Extract the full mapping type by finding matching parentheses
-      let depth = 0
-      let typeEnd = mappingMatch.index
-      for (let i = mappingMatch.index; i < cleaned.length; i++) {
-        if (cleaned[i] === '(') depth++
-        if (cleaned[i] === ')') {
-          depth--
-          if (depth === 0) {
-            typeEnd = i + 1
-            break
-          }
-        }
-      }
-      
-      if (typeEnd > mappingMatch.index) {
+      const mappingStartIndex = cleaned.indexOf('(', mappingMatch.index) // Find the ( after "mapping"
+      const closingParenIndex = findMatchingClosingParen(cleaned, mappingStartIndex, { ignoreStrings: false })
+
+      if (closingParenIndex > mappingStartIndex) {
+        const typeEnd = closingParenIndex + 1
         const type = cleaned.substring(mappingMatch.index, typeEnd)
         const afterType = cleaned.substring(typeEnd)
         
