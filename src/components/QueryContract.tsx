@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
+import { removeComments } from '../utils/solidity/commentRemover'
 import './QueryContract.css'
 
 interface QueryContractProps {
@@ -283,8 +284,8 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
       }
       
       // Determine state mutability
-      const stateMutability = trimmed.includes('pure') ? 'pure' : 
-                             trimmed.includes('view') ? 'view' : 'view'
+      const stateMutability = trimmed.includes('pure') ? 'pure' :
+                             trimmed.includes('view') ? 'view' : 'nonpayable'
       
       return {
         name,
@@ -461,8 +462,8 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
         const trimmed = member.trim()
         if (!trimmed) continue
         
-        // Try to match: type name or mapping(...) name
-        let memberMatch = trimmed.match(/(mapping\([^)]+\)|[a-zA-Z_][a-zA-Z0-9_.\[\]]*)\s+(\w+)\s*$/)
+        // Try to match: type name or mapping(...) name or mapping(...)[] name (array of mappings)
+        let memberMatch = trimmed.match(/(mapping\([^)]+\)(?:\[\])?|[a-zA-Z_][a-zA-Z0-9_.\[\]]*)\s+(\w+)\s*$/)
         if (memberMatch) {
           const originalType = memberMatch[1].trim()
           const memberName = memberMatch[2] || ''
@@ -552,10 +553,8 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
       return structMap.has(typeName)
     }
     
-    // Remove comments (single-line and multi-line)
-    let cleaned = source
-      .replace(/\/\/.*$/gm, '') // Single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Multi-line comments
+    // Remove comments (single-line and multi-line) while preserving string literals
+    let cleaned = removeComments(source)
     
     // Extract public state variables (including constants and immutables)
     // We'll search for patterns and manually extract mapping types
@@ -755,32 +754,30 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
     }
     
     // Extract view and pure functions
-    // Pattern: function name(params) [public|external] [view|pure] [returns (types)]
-    const functionRegex = /function\s+(\w+)\s*\(([^)]*)\)\s*(?:public|external|private|internal)?\s*(?:view|pure)?\s*(?:returns\s*\(([^)]+)\))?/gi
+    // Pattern: function name(params) [public|external] (view|pure) [returns (types)]
+    // Note: view or pure is now required in the regex to filter out non-view/pure functions early
+    const functionRegex = /function\s+(\w+)\s*\(([^)]*)\)\s*(?:public|external|private|internal)?\s*(view|pure)\s*(?:returns\s*\(([^)]+)\))?/gi
     let funcMatch
     while ((funcMatch = functionRegex.exec(cleaned)) !== null) {
       const name = funcMatch[1]
       const paramsStr = funcMatch[2]?.trim() || ''
-      const returnsStr = funcMatch[3]?.trim() || ''
-      
+      const funcStateMutability = funcMatch[3]?.trim() || 'view' // view or pure (captured from regex)
+      const returnsStr = funcMatch[4]?.trim() || ''
+
       // Get a wider context around the function to check for private/internal modifiers
       // Look at the text before the function keyword (up to 50 chars) to catch modifiers
       const matchIndex = funcMatch.index
       const contextStart = Math.max(0, matchIndex - 50)
       const contextEnd = Math.min(cleaned.length, matchIndex + funcMatch[0].length + 50)
       const funcContext = cleaned.substring(contextStart, contextEnd)
-      
+
       // Skip functions with "private" or "internal" visibility
       // Check both in the matched string and in the wider context
       if (funcContext.includes('private') || funcContext.includes('internal')) {
         continue
       }
-      
-      // Only include functions explicitly marked as "view" or "pure"
-      if (!funcContext.includes('view') && !funcContext.includes('pure')) {
-        // Skip if it's not explicitly marked as view or pure
-        continue
-      }
+
+      // Note: view/pure check is now done in regex, so we don't need to check funcContext here
       
       // Parse inputs
       const inputs: Array<{ name: string; type: string }> = []
@@ -846,10 +843,10 @@ export function QueryContract({ rpcUrl }: QueryContractProps) {
       if (hasUnresolvedInputs || hasUnresolvedOutputs) {
         continue // Skip this function
       }
-      
-      // Determine state mutability
-      const stateMutability = funcContext.includes('pure') ? 'pure' : 'view'
-      
+
+      // State mutability was captured from regex (funcStateMutability)
+      const stateMutability = funcStateMutability
+
       // For FunctionInfo, keep original output types (not converted to tuple)
       const funcInfo: FunctionInfo = {
         name,
