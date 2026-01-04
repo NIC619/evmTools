@@ -17,8 +17,21 @@
   text-align: center;
 }
 
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.auth-logo {
+  width: 48px;
+  height: 48px;
+}
+
 .auth-box h1 {
-  margin: 0 0 10px 0;
+  margin: 0;
   font-size: 32px;
   color: #333;
 }

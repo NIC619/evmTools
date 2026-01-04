@@ -252,7 +252,10 @@ export function Auth({ children }: AuthProps) {
     return (
       <div className="auth-container">
         <div className="auth-box">
-          <h1>🔐 EVM Tools</h1>
+          <div className="auth-header">
+            <img src="/logo.jpg" alt="Deadpool" className="auth-logo" />
+            <h1>EVM Tools</h1>
+          </div>
 
           {!hasPasskey ? (
             <>
