@@ -45,6 +45,7 @@ export function Auth({ children }: AuthProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasPasskey, setHasPasskey] = useState(false)
   const [isRegistering, setIsRegistering] = useState(false)
+  const [registrationCode, setRegistrationCode] = useState('')
 
   useEffect(() => {
     // Check if already authenticated in this session
@@ -55,13 +56,14 @@ export function Auth({ children }: AuthProps) {
       return
     }
 
-    // Check if user has registered a passkey
-    const credentialId = localStorage.getItem('evm_tools_credential_id')
-    setHasPasskey(!!credentialId)
+    // Check if user has registered passkey(s) - support multiple credentials
+    const credentialIds = localStorage.getItem('evm_tools_credential_ids')
+    const hasCredentials = !!credentialIds
+    setHasPasskey(hasCredentials)
     setIsLoading(false)
 
     // Auto-trigger authentication if passkey exists
-    if (credentialId) {
+    if (hasCredentials) {
       // Small delay to let UI render
       setTimeout(() => handleAuthenticate(), 100)
     }
@@ -72,6 +74,16 @@ export function Auth({ children }: AuthProps) {
     setError('')
 
     try {
+      // Verify registration code
+      const REGISTRATION_CODE = import.meta.env.VITE_REGISTRATION_CODE
+      if (!REGISTRATION_CODE) {
+        throw new Error('Registration code not configured')
+      }
+
+      if (registrationCode !== REGISTRATION_CODE) {
+        throw new Error('Invalid registration code')
+      }
+
       // Check if WebAuthn is supported
       if (!window.PublicKeyCredential) {
         throw new Error('Passkeys are not supported in this browser')
@@ -114,17 +126,30 @@ export function Auth({ children }: AuthProps) {
         throw new Error('Failed to create credential')
       }
 
-      // Store credential ID
+      // Store credential ID (support multiple)
       const credentialId = arrayBufferToBase64(credential.rawId)
-      localStorage.setItem('evm_tools_credential_id', credentialId)
+      const existingIds = localStorage.getItem('evm_tools_credential_ids')
+      const credentialIds = existingIds ? JSON.parse(existingIds) : []
 
-      // Also store the public key for verification
+      // Add new credential ID if not already present
+      if (!credentialIds.includes(credentialId)) {
+        credentialIds.push(credentialId)
+        localStorage.setItem('evm_tools_credential_ids', JSON.stringify(credentialIds))
+      }
+
+      // Also store the public key for reference (optional)
       const response = credential.response as AuthenticatorAttestationResponse
       const publicKey = arrayBufferToBase64(response.getPublicKey()!)
-      localStorage.setItem('evm_tools_public_key', publicKey)
+      const existingKeys = localStorage.getItem('evm_tools_public_keys')
+      const publicKeys = existingKeys ? JSON.parse(existingKeys) : []
+      if (!publicKeys.includes(publicKey)) {
+        publicKeys.push(publicKey)
+        localStorage.setItem('evm_tools_public_keys', JSON.stringify(publicKeys))
+      }
 
       setHasPasskey(true)
       setError('')
+      setRegistrationCode('')
 
       // Authenticate immediately
       sessionStorage.setItem('evm_tools_authed', 'true')
@@ -150,23 +175,26 @@ export function Auth({ children }: AuthProps) {
         throw new Error('Passkeys are not supported in this browser')
       }
 
-      const storedCredentialId = localStorage.getItem('evm_tools_credential_id')
-      if (!storedCredentialId) {
+      const storedIds = localStorage.getItem('evm_tools_credential_ids')
+      if (!storedIds) {
+        throw new Error('No passkey registered')
+      }
+
+      const credentialIds = JSON.parse(storedIds)
+      if (!credentialIds || credentialIds.length === 0) {
         throw new Error('No passkey registered')
       }
 
       // Generate a challenge
       const challenge = crypto.getRandomValues(new Uint8Array(32))
 
-      // Create authentication options
+      // Create authentication options with all stored credentials
       const publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
         challenge: challenge,
-        allowCredentials: [
-          {
-            id: base64ToArrayBuffer(storedCredentialId),
-            type: 'public-key',
-          },
-        ],
+        allowCredentials: credentialIds.map((id: string) => ({
+          id: base64ToArrayBuffer(id),
+          type: 'public-key' as const,
+        })),
         timeout: 60000,
         userVerification: 'preferred',
       }
@@ -198,8 +226,11 @@ export function Auth({ children }: AuthProps) {
   }
 
   const logout = () => {
-    localStorage.removeItem('evm_tools_credential_id')
-    localStorage.removeItem('evm_tools_public_key')
+    localStorage.removeItem('evm_tools_credential_ids')
+    localStorage.removeItem('evm_tools_public_keys')
+    localStorage.removeItem('evm_tools_credential_id') // Legacy support
+    localStorage.removeItem('evm_tools_public_key') // Legacy support
+    localStorage.removeItem('evm_tools_registration_locked') // Legacy support
     sessionStorage.removeItem('evm_tools_authed')
     setHasPasskey(false)
     setIsAuthenticated(false)
@@ -225,14 +256,24 @@ export function Auth({ children }: AuthProps) {
 
           {!hasPasskey ? (
             <>
-              <p className="auth-subtitle">First-time setup</p>
+              <p className="auth-subtitle">Register New Passkey</p>
+
               <p className="auth-description">
-                Register your device using Touch ID, Face ID, or your security key
+                Enter the registration code to register your passkey
               </p>
+
+              <input
+                type="password"
+                value={registrationCode}
+                onChange={(e) => setRegistrationCode(e.target.value)}
+                placeholder="Registration Code"
+                className="auth-input"
+                disabled={isRegistering}
+              />
 
               <button
                 onClick={handleRegister}
-                disabled={isRegistering}
+                disabled={isRegistering || !registrationCode}
                 className="auth-button"
               >
                 {isRegistering ? 'Registering...' : '✨ Register Passkey'}

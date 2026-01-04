@@ -32,9 +32,11 @@ function AppContent() {
             value={rpcUrl}
             onChange={handleRpcUrlChange}
           />
-          <button onClick={handleLogout} className="logout-button" title="Reset passkey and logout">
-            ⚙️ Reset & Logout
-          </button>
+          <div className="admin-controls">
+            <button onClick={handleLogout} className="logout-button" title="Reset passkey on this browser and logout">
+              ⚙️ Reset & Logout
+            </button>
+          </div>
         </header>
           <main className="app-main">
             <div className="tools-container">
