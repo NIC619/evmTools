@@ -40,6 +40,22 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 }
 
 export function Auth({ children }: AuthProps) {
+  // Check if auth is disabled (for local development)
+  const isAuthDisabled = import.meta.env.VITE_DISABLE_AUTH === 'true'
+
+  // If auth is disabled, skip all authentication and render children directly
+  if (isAuthDisabled) {
+    const noopLogout = () => {
+      console.log('Auth is disabled in development mode')
+    }
+
+    return (
+      <AuthContext.Provider value={{ logout: noopLogout }}>
+        {children}
+      </AuthContext.Provider>
+    )
+  }
+
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
