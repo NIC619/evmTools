@@ -115,3 +115,38 @@
   border: 2px solid #7b1fa2;
 }
 
+.delegated-address {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.delegated-address h4 {
+  margin: 0 0 0.75rem 0;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.address-code {
+  display: block;
+  padding: 0.75rem;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85rem;
+  color: #7b1fa2;
+  word-break: break-all;
+  margin-bottom: 0.75rem;
+}
+
+.delegation-info {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+}
+
