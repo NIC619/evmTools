@@ -90,14 +90,35 @@ export function Auth({ children }: AuthProps) {
     setError('')
 
     try {
-      // Verify registration code
-      const REGISTRATION_CODE = import.meta.env.VITE_REGISTRATION_CODE
-      if (!REGISTRATION_CODE) {
-        throw new Error('Registration code not configured')
-      }
+      // Verify registration code via server-side API (production)
+      // Falls back to client-side check for local development
+      try {
+        const response = await fetch('/api/verify-registration-code', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code: registrationCode }),
+        })
 
-      if (registrationCode !== REGISTRATION_CODE) {
-        throw new Error('Invalid registration code')
+        const result = await response.json()
+
+        if (!response.ok || !result.valid) {
+          throw new Error(result.error || 'Invalid registration code')
+        }
+      } catch (apiError: any) {
+        // Fallback for local development (API endpoint doesn't exist)
+        // Check client-side env variable if available
+        const FALLBACK_CODE = import.meta.env.VITE_REGISTRATION_CODE
+        if (FALLBACK_CODE) {
+          if (registrationCode !== FALLBACK_CODE) {
+            throw new Error('Invalid registration code')
+          }
+          // Code matches, continue with registration
+        } else {
+          // No fallback available, re-throw the original API error
+          throw new Error(apiError.message || 'Failed to verify registration code')
+        }
       }
 
       // Check if WebAuthn is supported
