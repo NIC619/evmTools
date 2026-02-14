@@ -1,13 +1,18 @@
 # EVM Tools
 
-A frontend application for quickly interacting with bytecode, contracts, and environment in EVM chains using wagmi and ethers.js.
+A personal React frontend for EVM (Ethereum Virtual Machine) development tools, deployed on Vercel with passkey authentication.
 
 ## Features
 
-- **RPC URL Management**: Select from built-in RPC URLs or add custom ones
-- **Query Contract**: Query contract functions using either:
-  - Function definitions (e.g., `address public immutable override p256;`)
-  - ABI JSON with function selection dropdown
+- **Parse Calldata** - Decode EVM transaction calldata
+- **Query Contract** - Query smart contract functions with Solidity parsing (supports function definitions and ABI JSON)
+- **Check Address Code** - Determine if an address is EOA, Contract, or EIP-7702 delegated account
+
+## Tech Stack
+
+- React 18 + TypeScript + Vite
+- Deployed on Vercel (with serverless functions)
+- WebAuthn Passkey authentication (Touch ID / Face ID)
 
 ## Getting Started
 
@@ -17,9 +22,11 @@ A frontend application for quickly interacting with bytecode, contracts, and env
 npm install
 ```
 
-### Development
+### Local Development
 
 ```bash
+cp .env.example .env.local
+# Edit .env.local - set VITE_DISABLE_AUTH=true to skip auth locally
 npm run dev
 ```
 
@@ -29,21 +36,36 @@ npm run dev
 npm run build
 ```
 
-## Usage
+### Test
 
-1. Select or enter an RPC URL at the top of the page
-2. Use the "Query Contract" tool to interact with contracts:
-   - Enter the contract address
-   - Choose between function definition or ABI JSON input
-   - Select a function (if using ABI)
-   - Enter function arguments if needed
-   - Click "Query Contract" to execute
+```bash
+npm run test
+```
 
-## Technologies
+## Environment Variables
 
-- React + TypeScript
-- Vite
-- wagmi
-- ethers.js
-- TanStack Query
+See `.env.example` for the full template.
 
+### Local Development (`.env.local`)
+
+| Variable | Description |
+|---|---|
+| `VITE_DISABLE_AUTH=true` | Skip authentication in development |
+| `VITE_REGISTRATION_CODE` | Fallback registration code for local testing |
+
+### Production (Vercel Dashboard)
+
+| Variable | Description |
+|---|---|
+| `REGISTRATION_CODE` | Server-side secret for passkey registration |
+| `DISABLE_REGISTRATION=true` | Block new passkey registrations (optional) |
+
+## Authentication
+
+- **Production**: Registration code verified server-side via `/api/verify-registration-code`, then WebAuthn passkey registration
+- **Local dev**: Set `VITE_DISABLE_AUTH=true` to bypass, or use `VITE_REGISTRATION_CODE` for local testing
+- **Disable registration**: Set `DISABLE_REGISTRATION=true` on Vercel after registering your own passkey
+
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full deployment guide.
