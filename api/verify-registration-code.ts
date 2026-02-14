@@ -6,6 +6,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  // Allow disabling registration via env var (production only)
+  if (process.env.DISABLE_REGISTRATION === 'true') {
+    return res.status(403).json({ error: 'Registration is currently disabled' })
+  }
+
   const { code } = req.body
 
   if (!code) {

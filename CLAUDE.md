@@ -68,6 +68,7 @@ VITE_REGISTRATION_CODE=localtest  # Fallback for local testing
 ### Production (Vercel Dashboard)
 ```bash
 REGISTRATION_CODE=your-secret    # Server-side only, NOT exposed to client
+DISABLE_REGISTRATION=true        # Block new passkey registrations (optional)
 ```
 
 ## EIP-7702 Support
