@@ -1,14 +1,15 @@
 .query-contract {
-  background: white;
-  border-radius: 8px;
+  background: var(--surface);
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
 .query-contract h2 {
   margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.5rem;
+  color: var(--text);
+  font-size: 1.375rem;
 }
 
 .form-group {
@@ -19,34 +20,36 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #555;
-  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 
 .form-group input[type="text"],
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
   font-family: inherit;
-  transition: border-color 0.2s;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color var(--transition);
 }
 
 .form-group input[type="text"]:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--accent);
+  background: var(--surface);
 }
 
 .form-group textarea {
   resize: vertical;
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
+  font-family: 'Fira Code', 'Cascadia Code', Menlo, Monaco, monospace;
+  font-size: 0.8125rem;
 }
 
 .radio-group {
@@ -60,19 +63,22 @@
   gap: 0.5rem;
   cursor: pointer;
   font-weight: normal;
+  color: var(--text);
 }
 
 .radio-group input[type="radio"] {
   cursor: pointer;
+  accent-color: var(--accent);
 }
 
 .parsed-info {
   margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: #f0f7ff;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  color: #0066cc;
+  padding: 0.5rem 0.625rem;
+  background: #eef2fa;
+  border: 1px solid #c4d0e8;
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  color: var(--accent);
 }
 
 .arg-input {
@@ -82,18 +88,18 @@
 .arg-input label {
   display: inline-block;
   margin-bottom: 0.25rem;
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
 }
 
 .warning-message {
-  padding: 0.75rem;
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 6px;
-  color: #856404;
+  padding: 0.625rem 0.75rem;
+  background: #f8f4e8;
+  border: 1px solid #ddd0b4;
+  border-radius: var(--radius);
+  color: #5c4a20;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .warning-message ul {
@@ -106,32 +112,33 @@
 }
 
 .error-message {
-  padding: 0.75rem;
-  background: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
-  color: #c33;
+  padding: 0.625rem 0.75rem;
+  background: #f9eaea;
+  border: 1px solid #e8c4c4;
+  border-radius: var(--radius);
+  color: #7a2626;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .query-button {
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.625rem 1.5rem;
+  background: var(--accent);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background var(--transition), box-shadow var(--transition);
   margin-top: 1rem;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .query-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(51, 78, 127, 0.2);
 }
 
 .query-button:disabled {
@@ -142,23 +149,24 @@
 .result {
   margin-top: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
+  background: var(--surface-soft);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .result h3 {
   margin-bottom: 1rem;
-  color: #333;
-  font-size: 1.1rem;
+  color: var(--text);
+  font-size: 1.0625rem;
 }
 
 .result-item {
-  padding: 0.75rem;
-  background: white;
-  border-radius: 4px;
+  padding: 0.625rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .result-item:last-child {
@@ -166,16 +174,16 @@
 }
 
 .result-item strong {
-  color: #667eea;
+  color: var(--accent);
   margin-right: 0.5rem;
 }
 
 .result-item code {
-  background: #f0f0f0;
-  padding: 0.2rem 0.4rem;
+  background: var(--bg);
+  padding: 0.15rem 0.35rem;
   border-radius: 3px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
+  font-family: 'Fira Code', 'Cascadia Code', Menlo, Monaco, monospace;
+  font-size: 0.875em;
   word-break: break-all;
+  color: var(--text);
 }
-

@@ -8,8 +8,8 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.875rem;
+  color: var(--text-muted);
 }
 
 .rpc-url-options {
@@ -19,32 +19,35 @@
 }
 
 .rpc-url-option {
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 6px;
-  color: white;
+  padding: 0.375rem 0.875rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.9rem;
+  transition: all var(--transition);
+  font-size: 0.875rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .rpc-url-option:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--surface-soft);
+  border-color: var(--accent);
+  color: var(--text);
 }
 
 .rpc-url-option.active {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: white;
+  background: var(--surface-soft);
+  border-color: var(--accent);
+  color: var(--accent);
   font-weight: 500;
 }
 
 .add-custom-btn {
-  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--accent) !important;
   font-weight: 500;
 }
 
@@ -53,9 +56,9 @@
 }
 
 .remove-url-btn {
-  background: rgba(255, 0, 0, 0.3);
-  border: none;
-  color: white;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -63,68 +66,75 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   padding: 0;
-  transition: background 0.2s;
+  transition: all var(--transition);
 }
 
 .remove-url-btn:hover {
-  background: rgba(255, 0, 0, 0.5);
+  background: #f9eaea;
+  border-color: #e8c4c4;
+  color: #7a2626;
 }
 
 .custom-url-input {
   display: flex;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 6px;
+  background: var(--surface-soft);
+  padding: 0.875rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .custom-url-input input {
   flex: 1;
-  padding: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  font-size: 0.9rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .custom-url-input input:focus {
   outline: none;
-  border-color: white;
-  background: white;
+  border-color: var(--accent);
 }
 
 .custom-url-input button {
-  padding: 0.5rem 1rem;
-  background: white;
-  color: #667eea;
+  padding: 0.375rem 0.875rem;
+  background: var(--accent);
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: background var(--transition);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.875rem;
 }
 
 .custom-url-input button:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
+  background: var(--accent-hover);
 }
 
 .current-rpc-url {
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
 }
 
 .current-rpc-url code {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.2rem 0.4rem;
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  padding: 0.15rem 0.35rem;
   border-radius: 3px;
-  font-size: 0.85em;
+  font-size: 0.8125em;
   word-break: break-all;
+  color: var(--accent);
 }
-

@@ -1,14 +1,15 @@
 .check-address-code {
-  background: white;
-  border-radius: 8px;
+  background: var(--surface);
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
 .check-address-code h2 {
   margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.5rem;
+  color: var(--text);
+  font-size: 1.375rem;
 }
 
 .form-group {
@@ -19,43 +20,46 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #555;
-  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 
 .form-group input[type="text"] {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   font-size: 0.9rem;
   font-family: inherit;
-  transition: border-color 0.2s;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color var(--transition);
 }
 
 .form-group input[type="text"]:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--accent);
+  background: var(--surface);
 }
 
 .check-button {
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.625rem 1.5rem;
+  background: var(--accent);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background var(--transition), box-shadow var(--transition);
   margin-top: 1rem;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .check-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(51, 78, 127, 0.2);
 }
 
 .check-button:disabled {
@@ -64,81 +68,83 @@
 }
 
 .error-message {
-  padding: 0.75rem;
-  background: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
-  color: #c33;
+  padding: 0.625rem 0.75rem;
+  background: #f9eaea;
+  border: 1px solid #e8c4c4;
+  border-radius: var(--radius);
+  color: #7a2626;
   margin-top: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .result {
   margin-top: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
+  background: var(--surface-soft);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .result h3 {
   margin-bottom: 1rem;
-  color: #333;
-  font-size: 1.1rem;
+  color: var(--text);
+  font-size: 1.0625rem;
 }
 
 .result-badge {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-size: 1.1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
   font-weight: 600;
   text-align: center;
   min-width: 150px;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .result-badge-eoa {
-  background: #e3f2fd;
-  color: #1976d2;
-  border: 2px solid #1976d2;
+  background: #eef2fa;
+  color: #2d4a7a;
+  border: 1px solid #c4d0e8;
 }
 
 .result-badge-contract {
-  background: #fff3e0;
-  color: #f57c00;
-  border: 2px solid #f57c00;
+  background: #f6f0e8;
+  color: #6b4a20;
+  border: 1px solid #ddd0bc;
 }
 
 .result-badge-eoa-7702 {
-  background: #f3e5f5;
-  color: #7b1fa2;
-  border: 2px solid #7b1fa2;
+  background: #eeecf8;
+  color: #3d2d6b;
+  border: 1px solid #c8c0e0;
 }
 
 .delegated-address {
   margin-top: 1.5rem;
   padding: 1rem;
-  background: #fff;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .delegated-address h4 {
   margin: 0 0 0.75rem 0;
-  color: #555;
-  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
   font-weight: 600;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .address-code {
   display: block;
-  padding: 0.75rem;
-  background: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  padding: 0.625rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: 'Fira Code', 'Cascadia Code', Menlo, Monaco, monospace;
   font-size: 0.85rem;
-  color: #7b1fa2;
+  color: var(--accent);
   word-break: break-all;
   margin-bottom: 0.75rem;
 }
@@ -146,7 +152,6 @@
 .delegation-info {
   margin: 0;
   font-size: 0.85rem;
-  color: #666;
-  line-height: 1.4;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
-
