@@ -528,6 +528,7 @@ export function ParseCalldata({ rpcUrl: _rpcUrl }: ParseCalldataProps) {
       </div>
 
       <button
+        type="button"
         className="parse-button"
         onClick={parseCalldata}
         disabled={!calldata || loading}

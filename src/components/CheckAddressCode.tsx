@@ -89,6 +89,7 @@ export function CheckAddressCode({ rpcUrl }: CheckAddressCodeProps) {
       </div>
 
       <button
+        type="button"
         className="check-button"
         onClick={checkAddress}
         disabled={!address || loading}

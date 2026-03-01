@@ -5,6 +5,7 @@ import { RpcUrlInput } from './components/RpcUrlInput'
 import { QueryContract } from './components/QueryContract'
 import { CheckAddressCode } from './components/CheckAddressCode'
 import { ParseCalldata } from './components/ParseCalldata'
+import { UploadSelectors } from './components/UploadSelectors'
 import './App.css'
 
 const queryClient = new QueryClient()
@@ -41,6 +42,7 @@ function AppContent() {
           <main className="app-main">
             <div className="tools-container">
               <ParseCalldata />
+              <UploadSelectors />
               {rpcUrl ? (
                 <>
                   <QueryContract rpcUrl={rpcUrl} />
