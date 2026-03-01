@@ -4,8 +4,9 @@ A personal React frontend for EVM (Ethereum Virtual Machine) development tools, 
 
 ## Features
 
-- **Parse Calldata** - Decode EVM transaction calldata
-- **Query Contract** - Query smart contract functions with Solidity parsing (supports function definitions and ABI JSON)
+- **Parse Calldata** - Decode EVM transaction calldata (network-free)
+- **Upload Function Selectors** - Derive 4-byte selectors from Solidity source and upload to [4byte.sourcify.dev](https://4byte.sourcify.dev); supports structs, user-defined value types, qualified type names, and public state variable getters (network-free)
+- **Query Contract** - Query smart contract view/pure functions with Solidity parsing (supports function definitions and ABI JSON)
 - **Check Address Code** - Determine if an address is EOA, Contract, or EIP-7702 delegated account
 
 ## Tech Stack
